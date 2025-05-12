@@ -76,7 +76,7 @@
                     <h3 style="margin: 0; font-weight: bolder">Let's Go</h3>
                 </button>
 
-                <p id="SigninMessage" style="color: rgb(203, 93, 93);"></p>
+                <p id="signinMessage" style="color: rgb(203, 93, 93);"> </p>
 
                 <p>
                     Already have an account, 
@@ -126,7 +126,7 @@
                         document.getElementById("pin3").value.trim() +
                         document.getElementById("pin4").value.trim();
             
-            //alert(`Username: ${username} \nEmail: ${email}\nPIN: ${password}`);
+            alert(`Username: ${username} \nEmail: ${email}\nPIN: ${password}`);
 
             // Validate email & PIN
             if (!username) {
@@ -156,6 +156,7 @@
             })
             .then(data => {
                 if (data.success) {
+                    alert("login successfull")
                     localStorage.setItem("authToken", data.token);
                     localStorage.setItem("username", data.username);
                     //document.getElementById("LoginMessage").innerText = data.message;
@@ -164,13 +165,13 @@
                     document.getElementById("signinMessage").innerText = data.message;
                     window.location.href = "/";  // Redirect to dashboard
                 } else {
-                    document.getElementById("LoginMessage").innerText = data.message;
+                    document.getElementById("signinMessage").innerText = data.message;
                 }
             })
             .catch(error => {
                 console.error("Error:", error);
                 alert(error)
-                document.getElementById("LoginMessage").innerText = "Account creation failed.";
+                document.getElementById("signinMessage").innerText = "Account creation failed";
             });
         };
     </script>

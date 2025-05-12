@@ -1,7 +1,7 @@
 1. Turn the standards to use the username as the key and make sure while creating account it was unique
     * signin is page is not showing the excat reason for decline - because of returing the error code directly at func final
 
-2. Captilise and proper casing should be taken care
+2. Captilise and proper casing should be taken care -- 1 point
 3. Score updation and proper refresh after update is important
     * Score = weights * 2 + sets * 3 + rep * 0.5
     * we could check the formula based on the user preference as well

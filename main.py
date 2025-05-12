@@ -43,7 +43,7 @@ def create_account():
 
         data = request.json
         username = data.get("username").lower()
-        email = data.get("email")
+        email = data.get("email").lower()
         password = data.get("password")
 
         print(username, email, password)
@@ -109,7 +109,7 @@ def create_account():
 def validate_login():
 
     data = request.json
-    email = data.get("email")
+    email = data.get("email").lower()
     password = data.get("password")
 
     if not email or not password:
