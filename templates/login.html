@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeveL Up</title>
+    <link rel="stylesheet" href="\static\style.css">
+
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script> -->
+
+    <style>
+        body{
+            background-color: black;
+            color: white;
+            font-family: 'Press Start 2P', system-ui;
+        }
+
+        label{
+            font-weight: bold;
+        }
+
+        p{
+            color: rgb(181, 175, 175);
+        }
+
+        .login_btn{
+            background-color: whitesmoke;
+            width: 100%;
+            height: 50px;
+            font-size: medium;
+            font-weight: bold;
+            border-radius: 10px;
+            border-width: 3px;
+        }
+
+        .login_btn:hover{
+            background-color: black;
+            color: whitesmoke;
+            border-color: cornflowerblue;
+            border-width: 3px;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- sprite sheet animation-->
+    <div class="Character">
+        <img class="Character_shadow pixelart" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" alt="Shadow" />
+        <img class="Character_spritesheet pixelart face-down" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacter.png" alt="Character" />
+    </div>
+
+    <div class="login_container">
+
+        <h2 style="text-align: center;">LeveL Up Your Journey</h2>
+        <p style="text-align: center">Enter your credentials</p><br>
+        <div>
+            
+            <form id="login_form" onsubmit="Submit_login(event)">
+
+                <label for="Email"> Email</label><br>
+                <input type="text" id="Email" placeholder="Enter Email">
+
+                <div id="pin_generation">
+                <label for="Pin"> Pin</label><br>
+
+                <input class="pin" type="text" id="pin1" maxlength="1" pattern="\d" required>
+                <input class="pin" type="text" id="pin2" maxlength="1" pattern="\d" required>
+                <input class="pin" type="text" id="pin3" maxlength="1" pattern="\d" required>
+                <input class="pin" type="text" id="pin4" maxlength="1" pattern="\d" required>
+                </div>
+
+                <!-- <br><br><a href="" class="text-light text-decoration-none">Forgot Password?</a><br><br><br> -->
+                <br><br>
+
+                <button type="submit" class="login_btn">
+                    <h3 style="margin: 0; font-weight: bolder">Check In</h3>
+                </button>
+
+                <p id="LoginMessage" style="color: rgb(80, 227, 95);"></p>
+
+                <p>
+                    Don't have an account yet? <br>
+                    <a href="/signin" class="text-light fw-bold"
+                        style="text-decoration: none; color: rgb(105, 171, 222); font-weight: bold;">Create
+                        Your Hero!</a>
+                </p>
+
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+
+        // Auto focus to next input after entering a digit
+        const inputs = document.querySelectorAll('#pin_generation input');
+        const emailInput = document.getElementById("Email");
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', function () {
+                if (!emailInput.value.trim()) {
+                    alert("Please enter your email before entering the PIN.");
+                    emailInput.focus();
+                    this.value = ""; // Clear the input value
+                    return;
+                }
+
+                if (this.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', function (e) {
+                if (e.key === "Backspace" && !this.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // document.getElementById("login_form").addEventListener("submit", function(event)
+        async function Submit_login(event) 
+        {
+            event.preventDefault(); // Prevent page reload
+
+            let email = document.getElementById("Email").value.trim();
+            let password = document.getElementById("pin1").value.trim() +
+                        document.getElementById("pin2").value.trim() +
+                        document.getElementById("pin3").value.trim() +
+                        document.getElementById("pin4").value.trim();
+            
+            // alert(`Email: ${email}\nPIN: ${password}`);
+
+            // Validate email & PIN
+            if (!email) {
+                document.getElementById("LoginMessage").innerText = "Please enter your email.";
+                return;
+            }
+            if (password.length !== 4 || isNaN(password)) {
+                document.getElementById("LoginMessage").innerText = "Please enter a valid 4-digit PIN.";
+                return;
+            }
+
+            // Send login request
+            fetch('/validate_login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem("authToken", data.token);
+                    localStorage.setItem("username", data.username);
+                    //alert(data.message);
+
+                    
+                    // Add a delay of 2000 milliseconds (2 seconds) before redirecting
+                    setTimeout(
+                    function() {
+                        window.location.href = "/";  // Redirect to dashboard 
+                    }, 500);
+
+
+
+                } else {
+                    document.getElementById("LoginMessage").innerText = data.message;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("LoginMessage").innerText = "Login failed. Please try again later.";
+            });
+        };
+
+
+
+
+    </script>
+</body>
+</html>

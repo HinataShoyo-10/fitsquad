@@ -1,0 +1,28 @@
+1. Turn the standards to use the username as the key and make sure while creating account it was unique
+    * signin is page is not showing the excat reason for decline - because of returing the error code directly at func final
+
+2. Captilise and proper casing should be taken care
+3. Score updation and proper refresh after update is important
+    * Score = weights * 2 + sets * 3 + rep * 0.5
+    * we could check the formula based on the user preference as well
+    * instead of sending the score from other functions such as update_pr or load_exercise, 
+        it better to create a api and use when need
+
+4. The dashboard should rank based on the scores acquired that day.
+    
+4. Create a generic API to fecth the basic details of the user
+
+5. Go for a bottom nav bar 
+
+
+
+4. Exerice names should be checked before, implementation
+
+
+4. Token expiration should be handled, using a API call to check the expiry of the token if exist
+5. Remove the alert functions and use messages with a slight delay
+
+6. Implementaion of Try and catch block over the code
+6. A seperate Log alerts only captured somewhere, to analyse later
+7. Different setence to be used instead of single words like PR updated, User created
+8. Look for the .env file implementation

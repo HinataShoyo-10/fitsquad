@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="\static\style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+
+        body  {
+            padding: 0px;
+            margin: 0px;
+            font-family: 'Press Start 2P', system-ui;
+            background-color: black;
+            color: white
+        }
+
+    </style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="bottom-nav">
+        <a href="/" class="nav-item"><i class="fa-duotone fa-solid fa-house fa-xl"></i></a>
+        <a href="/dashboard" class="nav-item"><i class="fa-duotone fa-solid fa-ranking-star fa-xl"></i></a>
+        
+        <a href="/profile" class="nav-item"><i class="fa-duotone fa-solid fa-user  fa-xl"></i></a>
+        <a href="/login" class="nav-item"><i class="fa-duotone fa-solid fa-right-to-bracket fa-xl" style="--fa-secondary-color: #000000;"></i></a>
+    </div>
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            color: #f7fafc;
+        }
+        .profile-container {
+            background-color: #2d3748;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 1.5rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 1.5rem;
+            background-color: #4a5568;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #f7fafc;
+            font-size: 2.25rem;
+            font-weight: 500;
+            border: 2px solid #718096;
+        }
+        .user-details h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #f7fafc;
+            margin-bottom: 0.5rem;
+        }
+        .user-details p {
+            font-size: 0.875rem;
+            color: #a0aec0;
+        }
+        
+        .measurements-section {
+            margin-bottom: 2rem;
+        }
+        .measurements-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #f7fafc;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 1rem;
+        }
+        .measurements-section p {
+            font-size: 0.875rem;
+            color: #a0aec0;
+            margin-bottom: 1.5rem;
+        }
+        .measurement-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .measurement-grid div {
+            display: flex;
+            flex-direction: column;
+        }
+        .measurement-grid label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #cbd5e0;
+            margin-bottom: 0.5rem;
+        }
+        .measurement-grid input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #718096;
+            font-size: 1rem;
+            color: #f7fafc;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: #4a5568;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .measurement-grid input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+        .add-measurement-button {
+            background-color: #38a169;
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
+        }
+        .add-measurement-button:hover {
+            background-color: #27794d;
+        }
+        .progress-goals-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 1.5rem;
+        }
+        .progress-goals-section div {
+            display: flex;
+            align-items: center;
+            margin-right: 1rem;
+        }
+        .progress-goals-section svg {
+            width: 24px;
+            height: 24px;
+            stroke: #667eea;
+            fill: none;
+            stroke-width: 2;
+            border-radius: 50%;
+            padding: 4px;
+            background-color: #4a5568;
+        }
+        .progress-goals-section span {
+            margin-left: 0.75rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #f7fafc;
+        }
+        .settings-logout-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .settings-logout-section div {
+            display: flex;
+            align-items: center;
+        }
+        .settings-logout-section svg {
+            width: 24px;
+            height: 24px;
+            stroke: #a0aec0;
+            fill: none;
+            stroke-width: 2;
+            border-radius: 50%;
+            padding: 4px;
+            background-color: #718096;
+        }
+        .settings-logout-section span {
+            margin-left: 0.75rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #f7fafc;
+        }
+        .logout-button {
+            color: #f56565;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+            border: none;
+            cursor: pointer;
+            background-color: transparent;
+        }
+        .logout-button:hover {
+            color: #c53030;
+        }
+    </style>
+</head>
+<body class="bg-gray-900">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100 p-4">
+        <div class="profile-container">
+            <div class="header">
+                <div class="user-info">
+                    <div class="profile-picture">User</div>
+                    <div class="user-details">
+                        <h1>John Smith</h1>
+                        <p>Member Since: 2023-01-15</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="measurements-section">
+                <h2>My Measurements</h2>
+                <p>Last Updated: 2024-07-24</p>
+                <div class="measurement-grid">
+                    <div>
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" value="180">
+                    </div>
+                    <div>
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" value="75">
+                    </div>
+                    <div>
+                        <label for="chest">Chest (cm)</label>
+                        <input type="number" id="chest" value="100">
+                    </div>
+                    <div>
+                        <label for="biceps-l">Biceps (L) (cm)</label>
+                        <input type="number" id="biceps-l" value="41">
+                    </div>
+                    <div>
+                        <label for="biceps-r">Biceps (R) (cm)</label>
+                        <input type="number" id="biceps-r" value="40">
+                    </div>
+                    <div>
+                        <label for="thighs-l">Thighs (L) (cm)</label>
+                        <input type="number" id="thighs-l" value="60">
+                    </div>
+                    <div>
+                        <label for="thighs-r">Thighs (R) (cm)</label>
+                        <input type="number" id="thighs-r" value="61">
+                    </div>
+                    <div>
+                        <label for="waist">Waist (cm)</label>
+                        <input type="number" id="waist" value="85">
+                    </div>
+                    <div>
+                        <label for="calves-l">Calves (L) (cm)</label>
+                        <input type="number" id="calves-l" value="40">
+                    </div>
+                    <div>
+                        <label for="calves-r">Calves (R) (cm)</label>
+                        <input type="number" id="calves-r" value="41">
+                    </div>
+                    <div>
+                        <label for="bmi">BMI (kg/m²)</label>
+                        <input type="text" id="bmi" readonly class="form-control-plaintext text-white" value="23.15">
+                    </div>
+                </div>
+                <button id="add-measurement" class="add-measurement-button">+ Add Measurement</button>
+            </div>
+
+            <div class="progress-goals-section">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-4"><path d="M3 9v13m0-4V9m4 4v9M7 3v17m0-4V3m4 8v5m0-6v6m4 4v1M19 7v7m0-3v3"/></svg>
+                    <span>Progress</span>
+                </div>
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flag-2"><path d="M19.3 5H15a3 3 0 0 0-3-3H2v16h17v-7a3 3 0 0 0-3-3z"/><path d="M15 5v8"/></svg>
+                    <span>Goals</span>
+                </div>
+            </div>
+
+            <div class="settings-logout-section">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="lucide lucide-settings-2"><path d="M12 20s-8-1.3-8-8 8-8 8-8 8 1.3 8 8-8 8-8 8z"/><path d="M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/><path d="M12 2v2"/><path d="M12 22v-2"/><path d="M18 6l-1.4-1.4"/><path d="M7.4 16.6L6 18"/><path d="M22 12h-2"/><path d="M2 12h2"/><path d="M18 18l-1.4 1.4"/><path d="M7.4 7.4L6 6"/></svg>
+                    <span>Settings</span>
+                </div>
+                <button class="logout-button">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const addMeasurementButton = document.getElementById('add-measurement');
+        const weightInput = document.getElementById('weight');
+        const chestInput = document.getElementById('chest');
+        const bicepsLInput = document.getElementById('biceps-l');
+        const bicepsRInput = document.getElementById('biceps-r');
+        const thighsLInput = document.getElementById('thighs-l');
+        const thighsRInput = document.getElementById('thighs-r');
+        const waistInput = document.getElementById('waist');
+        const calvesLInput = document.getElementById('calves-l');
+        const calvesRInput = document.getElementById('calves-r');
+        const heightInput = document.getElementById('height');
+        const bmiInput = document.getElementById('bmi');
+
+        function calculateBMI(weight, height) {
+            if (height <= 0 || weight <= 0) {
+                return "Invalid";
+            }
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            return bmi.toFixed(2);
+        }
+
+        function updateBMI() {
+            const weight = parseFloat(weightInput.value);
+            const height = parseFloat(heightInput.value);
+            const bmi = calculateBMI(weight, height);
+            bmiInput.value = bmi === "Invalid" ? "Invalid" : bmi;
+        }
+
+        weightInput.addEventListener('input', updateBMI);
+        heightInput.addEventListener('input', updateBMI);
+
+
+        addMeasurementButton.addEventListener('click', () => {
+            const weight = weightInput.value;
+            const chest = chestInput.value;
+            const bicepsL = bicepsLInput.value;
+            const bicepsR = bicepsRInput.value;
+            const thighsL = thighsLInput.value;
+            const thighsR = thighsRInput.value;
+            const waist = waistInput.value;
+            const calvesL = calvesLInput.value;
+            const calvesR = calvesRInput.value;
+            const height = heightInput.value;
+            const bmi = bmiInput.value;
+
+            if (height && weight && chest && bicepsL && bicepsR && thighsL && thighsR && waist && calvesL && calvesR) {
+                alert(`
+                    Height: ${height} cm
+                    Weight: ${weight} kg
+                    Chest: ${chest} cm
+                    Biceps (L): ${bicepsL} cm
+                    Biceps (R): ${bicepsR} cm
+                    Thighs (L): ${thighsL} cm
+                    Thighs (R): ${thighsR} cm
+                    Waist: ${waist} cm
+                    Calves (L): ${calvesL} cm
+                    Calves (R): ${calvesR} cm
+                    BMI: ${bmi} kg/m²
+                    
+                    Measurement added!
+                `);
+                heightInput.value = '';
+                weightInput.value = '';
+                chestInput.value = '';
+                bicepsLInput.value = '';
+                bicepsRInput.value = '';
+                thighsLInput.value = '';
+                thighsRInput.value = '';
+                waistInput.value = '';
+                calvesLInput.value = '';
+                calvesRInput.value = '';
+
+            } else {
+                alert('Please fill in all measurement fields.');
+            }
+        });
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1nqEd00nKjK9vH0pjofP23zL2Dukx" crossorigin="anonymous"></script>
+</body>
+</html>

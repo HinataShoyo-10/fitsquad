@@ -1,0 +1,9 @@
+# Dev environment
+pip
+autopep8
+# Web Framework
+flask-live-server
+flask
+
+pymongo
+python-dotenv
