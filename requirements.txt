@@ -1,9 +1,11 @@
+autopep8
 blinker
 cffi
 click
 cryptography
 dnspython
 Flask
+flask-cors
 itsdangerous
 Jinja2
 jwcrypto
