@@ -1,34 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-
-    <link rel="stylesheet" href="\static\style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Under Construction</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <style>
-         body  {
-            padding: 0px;
-            margin: 0px;
-            font-family: 'Press Start 2P', system-ui;
-            background-color: black;
-            color: white
-        }
+      body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #000000;
+        min-height: max(884px, 100dvh);
+      }
+
+      .gradient-text {
+        background: linear-gradient(to right, #38b2ac, #4299e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .nav-bar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 16px 0;
+        background-color: #070707;
+        border-top: 1px solid #374151;
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 50;
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #9ca3af;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .nav-item .material-icons {
+        font-size: 28px;
+        margin-bottom: 4px;
+      }
+
+      .nav-item span {
+        font-size: 12px;
+      }
+
+      .nav-item.active,
+      .nav-item:hover {
+        color: #3b82f6;
+      }
+
+      .nav-item a span {
+        display: block;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body class="flex flex-col min-h-screen">
     
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-6">
+      <div class="bg-black p-8 rounded-xl shadow-2xl text-center w-full max-w-md border">
+        <div class="mb-8">
+          <img alt="Under Construction Illustration" class="w-full h-auto mx-auto rounded-lg" 
+               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDu2DX5DXExP0zIudwdOTUjMpe81v71phzpmUS9OczCp850y3EFhTLPayPDYXJSsnmmg8VriZa-kZa8ZZhSgc10zR06LjRWCrbShF3wxcq9v94cmusRRMXU5_Vkq-9cA57Kycuh4OcsOycGQZip2pEFxMidALfYIXAyBmu3a-rkM0eZ6geXz7t3XPvwccchU5WQkZnG4aJDxi23C211LvBtmgSs4pOjRpWuzvV6CSjF75gXVdnLpfP8v9SL9y7KbiVQnzo_Ar33PFs" />
+        </div>
+        <h1 class="text-4xl font-bold text-white mb-4">
+          <span class="gradient-text">Under Construction</span>
+        </h1>
+        <p class="text-gray-400 text-lg mb-2">
+          FitSquad is currently undergoing some enhancements.
+        </p>
+        <div class="flex items-center justify-center space-x-4 mb-8">
+          <span class="material-icons text-teal-500 text-4xl">settings</span> 
+          <span class="material-icons text-blue-500 text-4xl">fitness_center</span>
+          <span class="material-icons text-teal-500 text-4xl">construction</span>
+        </div>
+        <p class="text-green-600 font-medium">
+          In the meantime, keep up with your fitness goals!
+        </p>
+      </div>
+    </main>
 
+    <!-- Bottom Nav -->
+    <nav class="nav-bar">
+      <div class="nav-item">
+        <a href="/">
+          <span class="material-icons">home</span>
+          <span>Home</span>
+        </a>
+      </div>
+      <div class="nav-item active">
+        <a href="/dashboard">
+          <span class="material-icons">leaderboard</span>
+          <span>Stats</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="/profile">
+          <span class="material-icons">person</span>
+          <span>Profile</span>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="/signout">
+          <span class="material-icons">logout</span>
+          <span>Logout</span>
+        </a>
+      </div>
+    </nav>
 
+    <script>
+      const authToken = localStorage.getItem("authToken"); // Fetch token from localStorage
 
+      async function CheckTokenExpiration() 
+      {
+          
+          if (!authToken) {
+              //alert("Token not found");
+              window.location.href = "/login"; // Redirect to login page
+              return;
+          }
 
-    <div class="bottom-nav">
-        <a href="/" class="nav-item"><i class="fa-duotone fa-solid fa-house fa-xl"></i></a>
-        <a href="/dashboard" class="nav-item"><i class="fa-duotone fa-solid fa-ranking-star fa-xl"></i></a>
-        
-        <a href="/profile" class="nav-item"><i class="fa-duotone fa-solid fa-user  fa-xl"></i></a>
-        <a href="/login" class="nav-item"><i class="fa-duotone fa-solid fa-right-to-bracket fa-xl" style="--fa-secondary-color: #000000;"></i></a>
-    </div>
-</body>
+          try {
+              const response = await fetch("/decode_Token", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      "Authorization": `Bearer ${authToken}` // Attach token for authentication
+                  }
+              });
+
+              const result = await response.json(); // Parse JSON response
+
+              if (!result.success) {
+                  localStorage.clear();
+                  window.location.href = "/login"; // Redirect to login page
+
+              }
+
+          } catch (error) {
+              console.error("Error validating token:", error);
+              alert("Failed to validate token. Redirecting to login.");
+              localStorage.removeItem("authToken");
+              window.location.href = "/login";
+          }
+      }
+
+      // Ensure function runs when page loads
+      document.addEventListener("DOMContentLoaded", CheckTokenExpiration);
+
+    </script>
+
+  </body>
 </html>

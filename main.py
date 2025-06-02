@@ -1,12 +1,14 @@
 import os
-import datetime
+import datetime as datetime
 import jwt
 import json
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from pymongo import MongoClient
 
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
+CORS(app, supports_credentials=True, expose_headers=["Authorization"])
 SECRET_KEY = "supersecretjwtkey"
 
 # Configuring Database
@@ -16,6 +18,7 @@ database = mongodb_client["Users"]
 creds_collection = database["Creds"]
 Users_PR_collection = database["Users_PR"]
 ScoreCard_collection = database["ScoreCard"]
+Feedback_collection = database["Feedback"]
 
 @app.route("/")
 def index():
@@ -27,7 +30,11 @@ def login():
 
 @app.route("/signin")
 def signin():
-    return render_template("signin.html")
+    return render_template('signin.html')
+
+@app.route("/signout")
+def signout():
+    return render_template("signout.html")
 
 @app.route('/dashboard')
 def dashboard():
@@ -42,11 +49,10 @@ def create_account():
     try :
 
         data = request.json
-        username = data.get("username").lower()
+        username = data.get("username").capitalize()
         email = data.get("email").lower()
         password = data.get("password")
 
-        print(username, email, password)
 
         if creds_collection.find_one({"username": username}):
             return jsonify({"success": False, "message": "UserName already exists, Please choose another"})
@@ -62,13 +68,15 @@ def create_account():
             "user_id": new_user_id,
             "username" : username,
             "email": email,
-            "password": password
+            "password": password,
+            "joined": datetime.datetime.today().strftime("%d-%B-%Y")    
         })
 
 
         new_PR_entry = {
                 "user_id": new_user_id,
-                "username": username}
+                "username": username,
+                "measurements": []}
 
         New_Score_Entry = { 
             "username" : username,
@@ -81,7 +89,7 @@ def create_account():
         jwt_payload = {
             ##"user_id": new_user_id,
             "username": username,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=2)
         }
             
         # Generate JWT Token
@@ -93,7 +101,9 @@ def create_account():
 
         return jsonify({"success": True,  
                         "token": token, 
-                        "username": username.capitalize(), 
+                        "username": username.capitalize(),
+                        "useremail": email.capitalize(),
+                        "userjoined": datetime.datetime.today().strftime("%d-%B-%Y"), 
                         "message": "Account created successfully"}), 201
     
     except Exception as error:
@@ -136,7 +146,9 @@ def validate_login():
 
         return jsonify({"success": True, 
                         "token": token, 
-                        "username": user["username"].capitalize(), 
+                        "username": user["username"].capitalize(),
+                        "useremail": user["email"].capitalize(),
+                        "userjoined": user["joined"],
                         "message": "Login Succesfull"})
 
     return jsonify({"success": False, "message": "Account not Found or Invalid credentials"})
@@ -147,7 +159,7 @@ def insert_pr():
     try:
         data = request.json
         
-        exercise_name = data.get("exercise_name")
+        exercise_name = data.get("exercise_name").title()
         category, weights, sets, reps = data.get("category"), data.get("weights") ,data.get("sets"), data.get("reps")
 
         auth_header = request.headers.get("Authorization")
@@ -230,6 +242,119 @@ def get_exercises():
     else:
         return jsonify({"success": False, "message": "User not found, please Login back"}), 
 
+
+@app.route("/update_measurements", methods=["POST","GET"])
+def update_measurements():
+    try:
+
+        auth_header = request.headers.get("Authorization")
+        # print("auth_header - ",auth_header)
+        token = auth_header.split(" ")[1]  # Extract the token
+        decoded_data = decode_jwt(token)
+
+        if(decoded_data["success"] is False):
+            return jsonify({"error": "Token missing or invalid"})
+                
+        username = decoded_data['user'].get("username")
+
+        if not username:
+            return jsonify({"error": "Username is required"})
+
+        # user = Users_PR_collection.find_one({"username": username})
+        # if not user:
+        #     print("username not found")
+        #     return jsonify({"error": "User not found"}), 404
+
+        if request.method == "GET":
+            ref = Users_PR_collection.find_one({"username": username}, {"_id": 0, "measurements": 1})
+
+            if not ref or "measurements" not in ref or not ref["measurements"]:
+                return jsonify({"success": False, "message": "No measurement data found"}), 404
+
+            BM_history = ref["measurements"][0]  # Access the first item in the measurements list
+            
+
+            measurement_data = {}
+            fields = [
+                "height", "weight", "chest", "waist",
+                "bicep_r", "bicep_l", "forearms_r", "forearms_l",
+                "thigh_r", "thigh_l", "calf_r", "calf_l"
+            ]
+
+            for field in fields:
+                try:
+                    measurement_data[field] = BM_history.get(field, [])[-1]  # Get the last value
+                except IndexError:
+                    measurement_data[field] = "--"  # In case the list is empty
+                except Exception as e:
+                    print(f"Error reading field '{field}': {e}")
+                    measurement_data[field] = "--"
+
+            #print("Latest measurement:", measurement_data)
+
+            return jsonify({"success": True, "details": measurement_data})
+
+
+
+        else:
+            data = request.json
+
+            # Extract form data
+            fields = [
+                "height", "weight", "chest", "waist",
+                "bicep_r", "bicep_l", "forearms_r", "forearms_l", "thigh_r", "thigh_l",
+                "calf_r", "calf_l"
+            ]
+            
+            measurement_data = {}
+            for field in fields:
+                val = data.get(field)
+                if val:
+                    try:
+                        measurement_data[field] = float(val)
+                    except ValueError:
+                        continue
+
+            ##print(measurement_data)
+            
+            # Construct the push dictionary
+            update_query = { f"measurements.0.{key}": value for key, value in measurement_data.items() if value is not None }
+
+            ##print(update_query)
+
+            if not update_query:
+                return jsonify({"error": "No valid measurements to update"}), 400
+
+            # Push each value to the corresponding array inside measurements[0]
+            update_operation = {"$push": update_query}
+
+            result = Users_PR_collection.update_one({"username": username}, update_operation)
+
+
+            return jsonify({"success": True, "message": "Measurements updated successfully"})
+
+    except Exception as error:
+        print(error)
+        return jsonify({"success": False, "message": error})
+
+
+@app.route("/submit_feedback", methods=["POST"])
+def submit_feedback():
+    try:
+        data = request.json
+        username = data.get("username")
+        feedback = data.get("feedback")
+
+        if(feedback):
+            # inserting into feedback collection
+            Feedback_collection.insert_one({"username": username, "feedback": feedback})
+            return jsonify({"success": True, "message": "Feedback submitted successfully"})
+        
+    except Exception as error:
+        print(error)
+        return jsonify({"success": False, "message": "Something went wrong"})
+
+
 @app.route("/decode_Token", methods=["POST"])
 def decode_token_api():
     result = decode_jwt()  # Call function without argument (token will be extracted from request)
@@ -252,7 +377,7 @@ def Fetch_Score(username=None):
             return {"success": False, "message": "Unable to fetch leaderboard"}
 
     else:
-        user_data = ScoreCard_collection.find_one({"username": username.lower()}, {"Score": 1, "_id": 0})
+        user_data = ScoreCard_collection.find_one({"username": username}, {"Score": 1, "_id": 0})
 
         if user_data and "Score" in user_data:
             return {"success": True, "Score": int(user_data["Score"])}
@@ -329,8 +454,8 @@ def update_score(username, exercise_name, Current_PR, user_record):
 
 
 def main():
+    ##app.run(port=int(os.environ.get('PORT', 5000)), debug=True)
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
-
 
 if __name__ == "__main__":
     Fetch_Score()

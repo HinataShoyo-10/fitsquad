@@ -1,129 +1,186 @@
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercise Log</title>
-    <link rel="stylesheet" href="\static\style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Fitness Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
     <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #111827;
+        color: #f3f4f6;
+      }
+      .main-container {
+        max-width: 420px;
+        margin: 0 auto;
+        background-color: #050505;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .header {
+        padding: 24px 20px;
+      }
+      .header-title {
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header-score {
+        font-size: 20px;
+        font-weight: 500;
+        color: #fbbf24;
+      }
+      .header-score .material-icons {
+        font-size: 20px;
+        vertical-align: middle;
+      }
 
-        body  {
-            padding: 0px;
-            padding-bottom: 100px;
-            margin: 0px;
-            font-family: 'Press Start 2P', system-ui;
-            background-color: black;
-            color: white
-        }
-
-        .container {
-            color: whitesmoke;
-            max-width: 600px;
-            margin: auto;
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border-bottom: 1px solid #444;
-        }
-        th {
-            background: cornflowerblue;
-            color: black;
-        }
-        tr:nth-child(even) {
-            background: #292929;
-        }
-        tr:nth-child(odd) {
-            background: #1e1e1e;
-        }
-        .form-group {
-            margin: 10px 0;
-        }
-        input {
-            width: 95%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background: #292929;
-            color: white;
-            font-size: 16px;
-        }
-
-        input:focus {
-            outline: none;
-            border: 1px solid cornflowerblue;
-        }
-
-        button {
-            background-color: whitesmoke;
-            width: 100%;
-            height: 50px;
-            font-size: medium;
-            font-weight: bold;
-            border-radius: 10px;
-        }
-
-        button:hover {
-            background-color: black;
-            color: whitesmoke;
-            border-color: cornflowerblue;
-            border-width: 3px;
-        }
-
-
-        .horizontal-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .horizontal-group select {
-            flex: 0.8;
-        }
-
-        .horizontal-group input {
-            flex: 2;
-        }
-
-        select,
-        option {
-            padding: 12px 14px;
-            background-color: #2b2b2b;
-            color: #f0f0f0;
-            border: 1px solid #444;
-            border-radius: 8px;
-            width: 100%;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
+      .form-section,
+      .records-section {
+        padding: 24px 20px;
+      }
+      .section-title {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #d1d5db;
+      }
+      .form-input,
+      .form-select {
+        background-color: #374151;
+        border: 1px solid #4b5563;
+        color: #f3f4f6;
+        border-radius: 8px;
+        padding: 12px;
+        width: 100%;
+        font-size: 16px;
+        margin-bottom: 16px;
+        appearance: none;
+      }
+      .form-input::placeholder {
+        color: #9ca3af;
+      }
+      .form-select-container {
+        position: relative;
+      }
+      .form-select-container .material-icons {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        pointer-events: none;
+      }
+      .submit-button {
+        background-color: #3b82f6;
+        color: white;
+        font-weight: 600;
+        padding: 14px;
+        border-radius: 8px;
+        text-align: center;
+        width: 100%;
+        font-size: 18px;
+        transition: background-color 0.3s ease;
+      }
+      .submit-button:hover {
+        background-color: #2563eb;
+      }
+      .table-container {
+        overflow-x: auto;
+      }
+      .records-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .records-table th,
+      .records-table td {
+        padding: 12px 10px;
+        text-align: left;
+        font-size: 14px;
+        border-bottom: 1px solid #374151;
+      }
+      .records-table th {
+        background-color: #4a5568;
+        color: #e5e7eb;
+        font-weight: 600;
+      }
+      .records-table td {
+        color: #d1d5db;
+      }
+      .records-table tr:last-child td {
+        border-bottom: none;
+      }
+      .nav-bar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 16px 0;
+        background-color: #070707;
+        border-top: 1px solid #374151;
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+      }
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #9ca3af;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+      .nav-item .material-icons {
+        font-size: 28px;
+        margin-bottom: 4px;
+      }
+      .nav-item span {
+        font-size: 12px;
+      }
+      .nav-item.active,
+      .nav-item:hover {
+        color: #3b82f6;
+      }
+      .nav-item a span {
+        display: block; /* Makes each span take its own line */
+      }
+      .flex-grow {
+        flex-grow: 1;
+      }
     </style>
-    
-</head>
-<body>
-    <div class="main" style="padding: 5px; margin:5px">
-    <h1 style="text-align: left; margin-bottom: 0px;">Hey, <span id="username" style="color:cornflowerblue;"></span></h1>
-    <h3 style="text-align: left; margin-top: 0px;">Score : <span id="user_score" style="color: coral;"></span> <i class="fa-solid fa-bolt" style="color: #FFD43B;"></i> </h3>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <header class="header">
+        <h1 class="header-title">
+          Hey, <span class="text-blue-400" id="username"></span>
+        </h1>
+        <h4>
+          <p class="header-score" style="display: flex; align-items: center; gap: 4px;">
+            Score : <span id="user_score"></span> <span class="material-icons">bolt</span>
+          </p>
+        </h4>
+      </header>
 
-    <!-- <h1><i class="fas fa-dumbbell"></i> Exercise Log</h1> -->
-    <div class="container">
-        <h3 style="margin-top: 0px;">Log Your Exercise</h3>
-        <form id="prForm">
-        
-            <div class="form-group horizontal-group">
-                <select id="category" required>
-                    <option value="" disabled selected>Targets</option>
+      <main class="flex-grow">
+        <section class="form-section">
+          <h2 class="section-title">Log Your Exercise</h2>
+          <form id="prForm">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="form-select-container">
+                <select class="form-select" id="category" required>
+                  <option value="" disabled selected>Targets</option>
                     <option value="Arms">Arms</option>
                     <option value="Back">Back</option>
                     <option value="Chest">Chest</option>
@@ -131,249 +188,254 @@
                     <option value="Core">Core</option>
                     <option value="Legs">Legs</option>
                 </select>
-            
-                <input type="text" id="exercise" placeholder="Exercise Name" required>
+              </div>
+
+            <input class="form-input" id="exercise" placeholder="Exercise Name" type="text"/>
             </div>
-        
-            <div class="form-group">
-                <input type="number" id="weights" step="0.1" placeholder="Weight (kg)" required>
-            </div>
-        
-            <div class="form-group">
-                <input type="number" id="sets" placeholder="Sets" required>
-            </div>
-        
-            <div class="form-group">
-                <input type="number" id="reps" placeholder="Reps" required>
-            </div>
-        
+            <input class="form-input" id="weights" placeholder="Weight (kg)" type="number" />
+            <input class="form-input" id="sets" placeholder="Sets" type="number" />
+            <input class="form-input" id="reps" placeholder="Reps" type="number" />
+            <button class="submit-button" type="submit">Submit</button>
+
             <p id="LogMessage"></p>
-        
-            <button type="submit">
-                <h3 style="margin: 0; font-weight: bolder">Submit</h3>
-            </button>
-        </form>
-        
+
+          </form>
+        </section>
+
+        <section class="records-section">
+          <h2 class="section-title">Personal Records</h2>
+          <div class="table-container">
+            <table class="records-table">
+              <thead>
+                <tr>
+                  <th>Exercise</th>
+                  <th>Weight (kg)</th>
+                  <th>Sets</th>
+                  <th>Reps</th>
+                </tr>
+              </thead>
+              <tbody id="exerciseTable">
+                  <!-- Data will be inserted here -->
+              </tbody>
+            </table>
+          </div>
+
+        <!-- <div id="exerciseTables" style="margin-top: 20px; margin-bottom: 20px;"></div> -->
+
+        </section>
+
+      </main>
+      <nav class="nav-bar">
+        <div class="nav-item active">
+          <a href="/">
+          <span class="material-icons">home</span>
+          <span>Home</span> </a>
+        </div>
+        <div class="nav-item">
+          <a href="/dashboard">
+          <span class="material-icons">leaderboard</span>
+          <span>Stats</span> </a>
+        </div>
+        <div class="nav-item">
+          <a href="/profile">
+          <span class="material-icons">person</span>
+          <span>Profile</span> </a>
+        </div>
+        <div class="nav-item">
+          <a href="/signout">
+          <span class="material-icons">logout</span>
+          <span>Logout</span> </a>
+        </div>
+      </nav>
     </div>
 
-    <h2>Personal Records</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Exercise</th>
-                <th>Weight (kg)</th>
-                <th>Sets</th>
-                <th>Reps</th>
-            </tr>
-        </thead>
-        <tbody id="exerciseTable">
-            <!-- Data will be inserted here -->
-        </tbody>
-        
-    </table>
-    </div>  
-
-    <div id="exerciseTables" style="margin-top: 20px; margin-bottom: 20px;"></div>
-
-
-    <div class="bottom-nav">
-        <a href="/" class="nav-item"><i class="fa-duotone fa-solid fa-house fa-xl"></i></a>
-        <a href="/dashboard" class="nav-item"><i class="fa-duotone fa-solid fa-ranking-star fa-xl"></i></a>
-        
-        <a href="/profile" class="nav-item"><i class="fa-duotone fa-solid fa-user  fa-xl"></i></a>
-        <a href="/login" class="nav-item"><i class="fa-duotone fa-solid fa-right-to-bracket fa-xl" style="--fa-secondary-color: #000000;"></i></a>
-    </div>
 
     <script>
-        const authToken = localStorage.getItem("authToken"); // Fetch token from localStorage
-        const username = localStorage.getItem("username")
+      const authToken = localStorage.getItem("authToken"); // Fetch token from localStorage
+      const username = localStorage.getItem("username")
 
-        document.getElementById("prForm").addEventListener("submit", async function(event) {
-            event.preventDefault(); // Prevent default form submission
+      document.getElementById("prForm").addEventListener("submit", async function(event) {
+          event.preventDefault(); // Prevent default form submission
 
-            // Get values from form
-            const category = document.getElementById("category").value;
-            const exercise = document.getElementById("exercise").value;
-            const weights = document.getElementById("weights").value;
-            const sets = document.getElementById("sets").value;
-            const reps = document.getElementById("reps").value;
+          // Get values from form
+          const category = document.getElementById("category").value;
+          const exercise = document.getElementById("exercise").value;
+          const weights = document.getElementById("weights").value;
+          const sets = document.getElementById("sets").value;
+          const reps = document.getElementById("reps").value;
 
-            // Create request body
-            const requestData = {
-                category: category,
-                exercise_name: exercise,
-                weights: parseInt(weights),
-                sets: parseInt(sets),
-                reps: parseInt(reps)
-            };
+          // Create request body
+          const requestData = {
+              category: category,
+              exercise_name: exercise,
+              weights: parseInt(weights),
+              sets: parseInt(sets),
+              reps: parseInt(reps)
+          };
 
-            try {
-                const response = await fetch("/insert_PR", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${authToken}` // Attach token for authentication
-                    },
-                    body: JSON.stringify(requestData)
-                });
+          try {
+              const response = await fetch("/insert_PR", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      "Authorization": `Bearer ${authToken}` // Attach token for authentication
+                  },
+                  body: JSON.stringify(requestData)
+              });
 
-                const result = await response.json();
-                console.log(result)
+              const result = await response.json();
+              //console.log(result)
 
-                if (result.success) {
-                    document.getElementById("prForm").reset();
-                    loadExerciseData()
-                    
-                    const userscoreSpan = document.getElementById("user_score");
-                    userscoreSpan.textContent = `${result.Score}`;
+              if (result.success) {
+                  document.getElementById("prForm").reset();
+                  loadExerciseData()
+                  
+                  const userscoreSpan = document.getElementById("user_score");
+                  userscoreSpan.textContent = `${result.Score}`;
 
-                    const logMessage = document.getElementById("LogMessage");
-                    logMessage.innerText = result.message;
-                    logMessage.style.color = "lightgreen"; // Optional: style it green on success
+                  const logMessage = document.getElementById("LogMessage");
+                  logMessage.innerText = result.message;
+                  logMessage.style.color = "lightgreen"; // Optional: style it green on success
 
-                    setTimeout(() => {
-                                    logMessage.innerText = ""
-                                }, 2000);
-            
-                    // alert(result.message);
-                } else {
-                    alert("Error: " + result.message);
-                }
-            } catch (error) {
-                console.error("Error submitting PR:", error);
-                alert("Failed to submit PR.");
-            }
-        });
+                  setTimeout(() => {
+                                  logMessage.innerText = ""
+                              }, 2000);
+          
+                  // alert(result.message);
+              } else {
+                  alert("Error: " + result.message);
+              }
+          } catch (error) {
+              console.error("Error submitting PR:", error);
+              alert("Failed to submit PR.");
+          }
+      });
 
-        async function loadExerciseData() {
+      async function loadExerciseData() {
 
-        if (!authToken) {
-            console.error("No auth token found!");
-            return;
-        }
+      if (!authToken) {
+          console.error("No auth token found!");
+          return;
+      }
 
-        if(username){
-            // Find the span element with the id 'usernameSpan'
-            const usernameSpan = document.getElementById("username");
-            
-            // Update the span element with the username
-            usernameSpan.textContent = `${username}`;
-        }
+      if(username){
+          // Find the span element with the id 'usernameSpan'
+          const usernameSpan = document.getElementById("username");
+          
+          // Update the span element with the username
+          usernameSpan.textContent = `${username}`;
+      }
 
-        try {
-                const response = await fetch("/get_exercises", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${authToken}` // Attach token for authentication
-                    }
-                });
+      try {
+              const response = await fetch("/get_exercises", {
+                  method: "GET",
+                  headers: {
+                      "Content-Type": "application/json",
+                      "Authorization": `Bearer ${authToken}` // Attach token for authentication
+                  }
+              });
 
-                if (!response.ok) {
-                    throw new Error("Failed to fetch exercises");
-                }
+              if (!response.ok) {
+                  throw new Error("Failed to fetch exercises");
+              }
 
-                const data = await response.json();
-                console.log("Fetched exercises:", data); // Debugging output
+              const data = await response.json();
+              //console.log("Fetched exercises:", data); // Debugging output
 
-                const tableBody = document.getElementById("exerciseTable");
-                tableBody.innerHTML = ""; // Clear previous entries
+              const tableBody = document.getElementById("exerciseTable");
+              tableBody.innerHTML = ""; // Clear previous entries
 
-                data.exercises.forEach(exercise => {
-                    const row = `<tr>
-                        <td>${exercise.exercise_name}</td>
-                        <td>${exercise.weights} kg</td>
-                        <td>${exercise.sets}</td>
-                        <td>${exercise.reps}</td>
-                    </tr>`;
-                    tableBody.innerHTML += row;
-                });
+              data.exercises.forEach(exercise => {
+                  const row = `<tr>
+                      <td>${exercise.exercise_name}</td>
+                      <td>${exercise.weights} kg</td>
+                      <td>${exercise.sets}</td>
+                      <td>${exercise.reps}</td>
+                  </tr>`;
+                  tableBody.innerHTML += row;
+              });
 
-                renderExerciseTables(data);
-            } 
-            catch (error) {
-                    console.error("Error loading exercise data:", error);
-                }
-            }
+          } 
+          catch (error) {
+                  console.error("Error loading exercise data:", error);
+              }
+          }
 
-        async function CheckTokenExpiration() {
+      async function CheckTokenExpiration() {
+        
+          if (!authToken) {
+              //alert("Token not found");
+              window.location.href = "/login"; // Redirect to login page
+              return;
+          }
 
-            const authToken = localStorage.getItem("authToken"); // Retrieve stored token
+          try {
+              const response = await fetch("/decode_Token", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      "Authorization": `Bearer ${authToken}` // Attach token for authentication
+                  }
+              });
 
-            if (!authToken) {
-                alert("Token not found");
-                window.location.href = "/login"; // Redirect to login page
-                return;
-            }
+              const result = await response.json(); // Parse JSON response
 
-            try {
-                const response = await fetch("/decode_Token", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${authToken}` // Attach token for authentication
-                    }
-                });
+              if (!result.success) {
+                  localStorage.clear();
+                  window.location.href = "/login"; // Redirect to login page
 
-                const result = await response.json(); // Parse JSON response
+              }
 
-                if (!result.success) {
-                    localStorage.removeItem("authToken"); // Remove invalid token
-                    window.location.href = "/login"; // Redirect to login page
+          } catch (error) {
+              console.error("Error validating token:", error);
+              alert("Failed to validate token. Redirecting to login.");
+              localStorage.removeItem("authToken");
+              window.location.href = "/login";
+          }
+      }
 
-                } else {
-                    console.log("Token is valid, user:", result.user);
-                }
+      async function fetch_user_score() {
 
-            } catch (error) {
-                console.error("Error validating token:", error);
-                alert("Failed to validate token. Redirecting to login.");
-                localStorage.removeItem("authToken");
-                window.location.href = "/login";
-            }
-        }
+          if(username)
+          {
+              const url = username ? `/Fetch_Score?username=${encodeURIComponent(username)}` : "/Fetch_Score";
 
-        async function fetch_user_score() {
+              try {
+                  const response = await fetch(url, {
+                      method: "GET",
+                      headers: {
+                          "Content-Type": "application/json",
+                          "Authorization": `Bearer ${authToken}` // Attach token for authentication
+                      }
+                  });
 
-            if(username)
-            {
-                const url = username ? `/Fetch_Score?username=${encodeURIComponent(username)}` : "/Fetch_Score";
+                  const result = await response.json(); // Parse JSON response
+                  //console.log("fetched score", result)
 
-                try {
-                    const response = await fetch(url, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${authToken}` // Attach token for authentication
-                        }
-                    });
+                  if (!result.success) {
+                      console.log("unable to fetch user score")
 
-                    const result = await response.json(); // Parse JSON response
-                    console.log("fetched score", result)
+                  } else {
+                      const userscoreSpan = document.getElementById("user_score");
+                      userscoreSpan.textContent = `${result.Score}`;
+                      
+                  }} 
 
-                    if (!result.success) {
-                        console.log("unable to fetch user score")
-
-                    } else {
-                        const userscoreSpan = document.getElementById("user_score");
-                        userscoreSpan.textContent = `${result.Score}`;
-                        
-                    }} 
-
-                catch (error) {
-                    console.error("unable to make api fetchscore", error);
-                }
-            }
+              catch (error) {
+                  console.error("unable to make api fetchscore", error);
+              }
+          }
 
 
-            
-        }
+          
+      }
 
-        // Ensure function runs when page loads
-        document.addEventListener("DOMContentLoaded", loadExerciseData);
-        document.addEventListener("DOMContentLoaded", CheckTokenExpiration);
-        document.addEventListener("DOMContentLoaded", fetch_user_score);
+      // Ensure function runs when page loads
+      document.addEventListener("DOMContentLoaded", CheckTokenExpiration);
+      document.addEventListener("DOMContentLoaded", loadExerciseData);
+      document.addEventListener("DOMContentLoaded", fetch_user_score);
 
-    </script>
+  </script>
 </body>
 </html>
+
