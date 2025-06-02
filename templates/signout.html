@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Logout</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: #000000;
+    }
+
+    .bottom-nav {
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+
+      .gradient-text {
+        background: linear-gradient(to right, #38b2ac, #4299e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .nav-bar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 16px 0;
+        background-color: #070707;
+        border-top: 1px solid #374151;
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 50;
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #9ca3af;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .nav-item .material-icons {
+        font-size: 28px;
+        margin-bottom: 4px;
+      }
+
+      .nav-item span {
+        font-size: 12px;
+      }
+
+      .nav-item.active,
+      .nav-item:hover {
+        color: #3b82f6;
+      }
+
+      .nav-item a span {
+        display: block;
+      }
+  </style>
+  <style>
+    body {
+      min-height: max(884px, 90dvh);
+    }
+  </style>
+</head>
+
+<body class="text-gray-200">
+  <div class="container mx-auto max-w-md min-h-screen flex flex-col p-6 bg-black">
+    <header class="text-center mb-8 p-5">
+      <h1 class="text-3xl font-bold text-white">Logout</h1>
+    </header>
+    <main class="flex-grow">
+      <p class="text-lg text-gray-300 mb-6 text-center">
+        We'd love to hear your thoughts. Join our community to share feedback,
+        ideas, or just stay connected.
+      </p>
+      <a class="flex items-center p-4 bg-gray-800 rounded-lg mb-6 hover:bg-gray-700 transition-colors" href="https://t.me/+1n8Ibt6meEg3MzU1">
+        <span class="material-icons text-blue-400 mr-4 text-3xl">send</span>
+        <div>
+          <h2 class="text-xl font-semibold text-white">Community Channel</h2>
+          <p class="text-gray-400">Join our community</p>
+        </div>
+      </a>
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-300 mb-2" for="feedback">Share your feedback or ideas</label>
+        <textarea
+          class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500"
+          id="feedback" name="feedback" placeholder="Type your feedback here..." rows="5"></textarea>
+          <span id ="feedback_message" class="text-green-400"></span>
+      </div>
+
+      
+      <button
+        id = "submitFeedbackBtn"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg text-lg transition-colors mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-black">
+        Submit Feedback
+      </button>
+      <button
+        id = "logoutBtn"
+        class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg text-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black">
+        Log Out
+      </button>
+    </main>
+  </div>
+
+    <!-- Bottom Nav -->
+  <nav class="nav-bar">
+    <div class="nav-item">
+      <a href="/">
+        <span class="material-icons">home</span>
+        <span>Home</span>
+      </a>
+    </div>
+    <div class="nav-item">
+      <a href="/dashboard">
+        <span class="material-icons">leaderboard</span>
+        <span>Stats</span>
+      </a>
+    </div>
+    <div class="nav-item">
+      <a href="/profile">
+        <span class="material-icons">person</span>
+        <span>Profile</span>
+      </a>
+    </div>
+    <div class="nav-item active">
+      <a href="/signout">
+        <span class="material-icons">logout</span>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <script>
+
+    const authToken = localStorage.getItem("authToken"); // Fetch token from localStorage
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const username = localStorage.getItem("username");
+  
+      // Logout button handler
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+          localStorage.clear();
+          window.location.href = "/login";
+        });
+      }
+  
+      // Submit Feedback button handler
+      const submitBtn = document.getElementById("submitFeedbackBtn");
+      if (submitBtn) {
+        submitBtn.addEventListener("click", async function () {
+          const feedbackInput = document.getElementById("feedback");
+          const feedback = feedbackInput ? feedbackInput.value.trim() : "";
+  
+          if (!feedback || !username) {
+            alert("Please enter your feedback and ensure username is available.");
+            return;
+          }
+  
+          try {
+            const response = await fetch('/submit_feedback', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ username, feedback })
+            });
+  
+            if (response.ok) {
+                const messageEl = document.getElementById("feedback_message");
+                messageEl.textContent = "Thanks for the Feedback";
+                feedbackInput.value = "";
+
+                setTimeout(() => {
+                  messageEl.textContent = ""
+                }, 2000);
+              } 
+
+            else {
+              alert("Failed to submit feedback. Please try again.");
+              console.error("Server responded with status:", response.status);
+            }
+          } catch (error) {
+            console.error("Error submitting feedback:", error);
+            alert("An error occurred. Please try again later.");
+          }
+        });
+      }
+    });
+
+    async function CheckTokenExpiration() 
+      {
+          
+          if (!authToken) {
+              //alert("Token not found");
+              window.location.href = "/login"; // Redirect to login page
+              return;
+          }
+
+          try {
+              const response = await fetch("/decode_Token", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      "Authorization": `Bearer ${authToken}` // Attach token for authentication
+                  }
+              });
+
+              const result = await response.json(); // Parse JSON response
+
+              if (!result.success) {
+                  localStorage.clear();
+                  window.location.href = "/login"; // Redirect to login page
+
+              }
+
+          } catch (error) {
+              console.error("Error validating token:", error);
+              alert("Failed to validate token. Redirecting to login.");
+              localStorage.removeItem("authToken");
+              window.location.href = "/login";
+          }
+      }
+
+      // Ensure function runs when page loads
+      document.addEventListener("DOMContentLoaded", CheckTokenExpiration);
+
+
+  </script>
+  
+
+  
+</body>
+
+</html>

@@ -76,7 +76,7 @@
                     <h3 style="margin: 0; font-weight: bolder">Let's Go</h3>
                 </button>
 
-                <p id="signinMessage" style="color: rgb(203, 93, 93);"> </p>
+                <p id="signinMessage" style="color: rgb(91, 190, 88);"> </p>
 
                 <p>
                     Already have an account, 
@@ -126,7 +126,7 @@
                         document.getElementById("pin3").value.trim() +
                         document.getElementById("pin4").value.trim();
             
-            alert(`Username: ${username} \nEmail: ${email}\nPIN: ${password}`);
+            //alert(`Username: ${username} \nEmail: ${email}\nPIN: ${password}`);
 
             // Validate email & PIN
             if (!username) {
@@ -156,14 +156,19 @@
             })
             .then(data => {
                 if (data.success) {
-                    alert("login successfull")
+                    //alert("login successfull")
                     localStorage.setItem("authToken", data.token);
                     localStorage.setItem("username", data.username);
-                    //document.getElementById("LoginMessage").innerText = data.message;
-                    // alert(data.message);
+                    localStorage.setItem("useremail", data.useremail);
+                    localStorage.setItem("userjoined", data.userjoined);
+
 
                     document.getElementById("signinMessage").innerText = data.message;
-                    window.location.href = "/";  // Redirect to dashboard
+
+                    setTimeout(() => {
+                        window.location.href = "/";  // Redirect to homepage
+                    }, 2000);
+                    
                 } else {
                     document.getElementById("signinMessage").innerText = data.message;
                 }
