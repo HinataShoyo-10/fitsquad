@@ -192,7 +192,7 @@
 
             <input class="form-input" id="exercise" placeholder="Exercise Name" type="text"/>
             </div>
-            <input class="form-input" id="weights" placeholder="Weight (kg)" type="number" />
+            <input class="form-input" id="weights" placeholder="Weight (kg)" type="float" />
             <input class="form-input" id="sets" placeholder="Sets" type="number" />
             <input class="form-input" id="reps" placeholder="Reps" type="number" />
             <button class="submit-button" type="submit">Submit</button>
@@ -268,7 +268,7 @@
           const requestData = {
               category: category,
               exercise_name: exercise,
-              weights: parseInt(weights),
+              weights: parseFloat(weights),
               sets: parseInt(sets),
               reps: parseInt(reps)
           };
