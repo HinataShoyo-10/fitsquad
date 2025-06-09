@@ -455,8 +455,8 @@ def update_score(username, exercise_name, Current_PR, user_record):
 
 
 def main():
-    app.run(port=int(os.environ.get('PORT', 5000)), debug=True)
-    ##app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
+    ##app.run(port=int(os.environ.get('PORT', 5000)), debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
 
 if __name__ == "__main__":
     Fetch_Score()
