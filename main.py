@@ -161,6 +161,7 @@ def insert_pr():
         
         exercise_name = data.get("exercise_name").title()
         category, weights, sets, reps = data.get("category"), data.get("weights") ,data.get("sets"), data.get("reps")
+        print(category, weights, sets, reps)
 
         auth_header = request.headers.get("Authorization")
         #print(f"auth_header :", auth_header)
@@ -420,7 +421,7 @@ def update_score(username, exercise_name, Current_PR, user_record):
             
             if(Pre_weights and Pre_sets and Pre_reps):
                 if(Current_PR[0] >= Pre_weights):
-                    Inc_score += abs(Current_PR[0] - Pre_weights) * 2
+                    Inc_score += int(abs(Current_PR[0] - Pre_weights) * 2)
                 
                 if(Current_PR[1] >= Pre_sets):
                     Inc_score += abs(Current_PR[1] - Pre_sets) * 3
