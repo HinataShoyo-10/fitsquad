@@ -44,6 +44,11 @@ def dashboard():
 def profile():
     return render_template("profile.html")
 
+# Serve the Webpushr service worker files from root
+@app.route('/webpushr-sw.js')
+def worker():
+    return send_from_directory('.','webpushr-sw.js')
+
 @app.route("/create_account", methods=["POST"])
 def create_account():
     try :
