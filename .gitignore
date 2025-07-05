@@ -2,3 +2,4 @@
 .vscode
 .idx
 /utils
+/__pycache__

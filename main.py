@@ -6,6 +6,10 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from pymongo import MongoClient
 
+from push_notificaitons import send_PushNotification
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+import pytz
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app, supports_credentials=True, expose_headers=["Authorization"])
@@ -19,6 +23,13 @@ creds_collection = database["Creds"]
 Users_PR_collection = database["Users_PR"]
 ScoreCard_collection = database["ScoreCard"]
 Feedback_collection = database["Feedback"]
+
+# Define IST timezone
+IST = pytz.timezone('Asia/Kolkata')
+scheduler = BackgroundScheduler(timezone=IST)
+trigger = CronTrigger(hour=8, minute=00, timezone=IST) # Set the trigger (change hour/minute for testing)
+scheduler.add_job(send_PushNotification, trigger=trigger, id="daily_gym_reminder")
+scheduler.start()
 
 @app.route("/")
 def index():
@@ -466,4 +477,3 @@ def main():
 if __name__ == "__main__":
     Fetch_Score()
     main()
-    
