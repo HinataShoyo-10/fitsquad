@@ -4,6 +4,7 @@ import jwt
 import json
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
+from dotenv import load_dotenv
 from pymongo import MongoClient
 
 from push_notificaitons import send_PushNotification
@@ -13,10 +14,11 @@ import pytz
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app, supports_credentials=True, expose_headers=["Authorization"])
-SECRET_KEY = "supersecretjwtkey"
+load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # Configuring Database
-mongodb_connection_string = "mongodb+srv://Admin_Control:Admin_Control@datacluster.nuq2d.mongodb.net/"
+mongodb_connection_string = os.getenv("mongodb_connection_string")
 mongodb_client = MongoClient(mongodb_connection_string)
 database = mongodb_client["Users"]
 creds_collection = database["Creds"]
@@ -24,12 +26,6 @@ Users_PR_collection = database["Users_PR"]
 ScoreCard_collection = database["ScoreCard"]
 Feedback_collection = database["Feedback"]
 
-# Define IST timezone
-IST = pytz.timezone('Asia/Kolkata')
-scheduler = BackgroundScheduler(timezone=IST)
-trigger = CronTrigger(hour=8, minute=00, timezone=IST) # Set the trigger (change hour/minute for testing)
-scheduler.add_job(send_PushNotification, trigger=trigger, id="daily_gym_reminder")
-scheduler.start()
 
 @app.route("/")
 def index():
@@ -475,5 +471,12 @@ def main():
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
 
 if __name__ == "__main__":
+    # Setup scheduler
+    IST = pytz.timezone('Asia/Kolkata')
+    scheduler = BackgroundScheduler(timezone=IST)
+    trigger = CronTrigger(hour=8, minute=0, timezone=IST)
+    scheduler.add_job(send_PushNotification, trigger=trigger, id="daily_gym_reminder")
+    scheduler.start()
+    
     Fetch_Score()
     main()

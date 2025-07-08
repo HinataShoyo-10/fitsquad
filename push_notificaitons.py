@@ -1,5 +1,9 @@
 import requests
 import random
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 notifications = [
     {"title": "Yo, Beast!", "message": "Did you crush the gym today or what?"},
@@ -36,22 +40,26 @@ notifications = [
 
 
 def send_PushNotification():
-    print(random.choice(notifications))
-    selected = random.choice(notifications)
-    title=selected["title"]
-    message = selected["message"]
-    Target_URL = "https://dev-fitsquad.onrender.com/"
-        
-    headers = {
-        'webpushrKey': '404e30e1a758b0a7061916b4b98e7f72',
-        'webpushrAuthToken': '111019',
-        'Content-Type': 'application/json',
-    }
+    try:
+        selected = random.choice(notifications)
+        title=selected["title"]
+        message = selected["message"]
+        Target_URL = "https://dev-fitsquad.onrender.com/"
+            
+        headers = {
+            'webpushrKey': os.getenv("webpushrKey"),
+            'webpushrAuthToken': os.getenv("webpushrAuthToken"),
+            'Content-Type': 'application/json',
+        }
 
-    data = f'{{"title": "{title}", "message": "{message}", "target_url": "{Target_URL}"}}'
+        data = f'{{"title": "{title}", "message": "{message}", "target_url": "{Target_URL}"}}'
 
-    response = requests.post('https://api.webpushr.com/v1/notification/send/all', headers=headers, data=data)
+        response = requests.post('https://api.webpushr.com/v1/notification/send/all', headers=headers, data=data)
+        print(response)
 
-    return response
+        return response
+
+    except Exception as error:
+        print(error)
 
 
