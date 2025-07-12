@@ -7,10 +7,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
-from push_notificaitons import send_PushNotification
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.cron import CronTrigger
-import pytz
+from push_notifications import send_PushNotification
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app, supports_credentials=True, expose_headers=["Authorization"])
@@ -55,6 +52,11 @@ def profile():
 @app.route('/webpushr-sw.js')
 def worker():
     return send_from_directory('.','webpushr-sw.js')
+
+@app.route('/send_notifications')
+def send_notifications():
+    res  = send_PushNotification()
+    print(f"send notificaitons -- {res} ")
 
 @app.route("/create_account", methods=["POST"])
 def create_account():
@@ -380,6 +382,25 @@ def Fetch_Score_Call():
     result = Fetch_Score(username)
     return jsonify(result)  # Ensure response is properly formatted JSON
 
+@app.route('/workout_checkin', methods=['POST'])
+def checkin():
+    data = request.get_json()
+    username = data.get('username')
+    checkin_date = data.get('date')
+
+    if not username or not checkin_date:
+        return jsonify({'error': 'Missing username or date'}), 400
+
+    # Add check-in date if not already present
+    Users_PR_collection.update_one(
+        {"username": username},
+        {"$addToSet": {"checkins": checkin_date}},  # No duplicates
+        upsert=True
+    )
+
+    return jsonify({"message": f"Checked in for {checkin_date}"}), 200
+
+
 def Fetch_Score(username=None):
     if username is None:
         results = list(ScoreCard_collection.find({}, {"username": 1, "Score": 1, "_id": 0}))
@@ -471,12 +492,5 @@ def main():
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
 
 if __name__ == "__main__":
-    # Setup scheduler
-    IST = pytz.timezone('Asia/Kolkata')
-    scheduler = BackgroundScheduler(timezone=IST)
-    trigger = CronTrigger(hour=8, minute=0, timezone=IST)
-    scheduler.add_job(send_PushNotification, trigger=trigger, id="daily_gym_reminder")
-    scheduler.start()
-    
     Fetch_Score()
     main()
