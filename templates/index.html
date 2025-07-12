@@ -178,7 +178,6 @@
       border-color:  rgb(105, 171, 222);
       position: relative;
       width: 80vw;
-      height: 50vh;
       text-align: center;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
@@ -279,9 +278,13 @@
 
         <div class="checkin_popup-overlay" id="checkin_popup">
             <div class="checkin_popup-card">
-              <div class="checkin_popup_close" id="checkin_popup_close">✖</div>
-              <p style="font-size: larger;">Did you hit the gym today?</p>
-              <div class="ryu"></div>              
+              <div class="checkin_popup_close" id="checkin_popup_close">✖</div><br>
+              <p style="font-size: 1.5rem; font-weight: bold; color:#fbbf24; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                Finished your Workout
+              </p><br>
+              
+              <img src="{{ url_for('static', filename='media/training.png') }}" alt="Training" style="display: block; margin: 0 auto; max-width: 70%; height: auto;">
+              <!-- <div class="ryu"></div>               -->
               <button class="checkin_btn" id="checkin_btn">Check IN</button>
               <button class="checkin_remind_btn" id="checkin_remind_btn">Remind me later</button>
             </div>
