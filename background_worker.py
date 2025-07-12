@@ -50,7 +50,7 @@ while True:
     now = datetime.now(IST)
     current_time_str = now.strftime('%Y-%m-%d %H:%M:%S')
 
-    if now.hour == 8 and now.minute == 30:
+    if now.hour == 19 and now.minute == 15:
         if send_notification():
             telegram_bot_send(f"✅ Notification sent at {current_time_str}")
         else:
