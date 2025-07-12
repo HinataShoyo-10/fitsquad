@@ -4,3 +4,4 @@
 .env
 /utils
 /__pycache__
+/service
