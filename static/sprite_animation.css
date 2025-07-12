@@ -1,0 +1,12 @@
+.ryu {
+    width: 435px;
+    height: 267px;
+    background:  url('http://bennet.org/images/codepen/ryu-sprite-demo.png') no-repeat 0 0%;
+    animation: sprite 3.5s steps(45) infinite;
+    background-size: 100% auto;
+  }
+  
+  @keyframes sprite {
+    from { background-position: 0 0%; }
+    to { background-position: 0 100%; }
+  }

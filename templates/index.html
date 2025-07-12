@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,10 +5,13 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Fitness Tracker</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="\static\sprite_animation.css">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 
     <style>
+
       body {
         font-family: "Inter", sans-serif;
         background-color: #111827;
@@ -153,6 +155,57 @@
       .flex-grow {
         flex-grow: 1;
       }
+
+      .checkin_popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .checkin_popup-card {
+      background: rgb(0, 0, 0);
+      color: whitesmoke;
+      padding: 20px;
+      border: 3px solid;
+      border-radius: 10px;
+      border-color:  rgb(105, 171, 222);
+      position: relative;
+      width: 80vw;
+      height: 50vh;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .checkin_popup_close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .checkin_btn, .checkin_remind_btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .checkin_remind_btn {
+      background-color:  rgb(105, 171, 222);
+      margin-left: 10px;
+    }
+
     </style>
     <style>
       body {
@@ -222,6 +275,17 @@
 
           </form>
         </section>
+        
+
+        <div class="checkin_popup-overlay" id="checkin_popup">
+            <div class="checkin_popup-card">
+              <div class="checkin_popup_close" id="checkin_popup_close">✖</div>
+              <p style="font-size: larger;">Did you hit the gym today?</p>
+              <div class="ryu"></div>              
+              <button class="checkin_btn" id="checkin_btn">Check IN</button>
+              <button class="checkin_remind_btn" id="checkin_remind_btn">Remind me later</button>
+            </div>
+        </div>
 
         <section class="records-section">
           <h2 class="section-title">Personal Records</h2>
@@ -446,10 +510,102 @@
                   console.error("unable to make api fetchscore", error);
               }
           }
-
-
           
       }
+
+      const popup = document.getElementById('checkin_popup');
+      const closeBtn = document.getElementById('checkin_popup_close');
+      const checkinBtn = document.getElementById('checkin_btn');
+      const remindBtn = document.getElementById('checkin_remind_btn');
+
+      const now = new Date().getTime();
+      const remindTime = localStorage.getItem('checkin_remindTime');
+      const hasVisited = localStorage.getItem('checkin_completed');
+
+      const shouldShowPopup = () => {
+          const now = Date.now();
+          const today = new Date().toISOString().split("T")[0];
+
+          const lastCheckin = localStorage.getItem('checkin_completed');
+          const remindTime = localStorage.getItem('checkin_remindTime');
+
+          // Already checked in today
+          if (lastCheckin === today) {
+            //console.log("user checkedin Today")
+            return false;
+          }
+
+          // If remindTime is set, check if the reminder time has passed
+          if (remindTime) {
+            const remindAfter = parseInt(remindTime, 10);
+            if (now < remindAfter) {
+              //console.log("still time left")
+              return false; // Not yet time to remind
+            } 
+            else {
+              //console.log("need to remind user")
+              localStorage.removeItem('checkin_remindTime'); // Clean it up
+            }
+          }
+
+          // Otherwise, show popup
+          return true;
+      };
+
+
+        if (shouldShowPopup()) {
+        popup.style.display = 'flex';
+        }
+
+        // const handleCheckin = () => {
+        // popup.style.display = 'none';
+        // localStorage.setItem('checkin_completed', 'true');
+        // localStorage.removeItem('checkin_remindTime');
+        // };
+
+        const handleRemindLater = () => {
+        popup.style.display = 'none';
+        const remindAfter = now + 30 * 60 * 1000; // 30 minutes in ms
+        localStorage.setItem('checkin_remindTime', remindAfter.toString());
+        };
+
+        closeBtn.addEventListener('click', handleRemindLater); // Treating close icon as "remind me later"
+        //gotItBtn.addEventListener('click', handleCheckin);
+        remindBtn.addEventListener('click', handleRemindLater);
+
+        checkinBtn.addEventListener("click", () => {
+            // 1. Hide popup
+            popup.style.display = 'none';
+
+            // 2. Store in localStorage
+            const today = new Date().toISOString().split("T")[0]; // "2025-07-12"
+            localStorage.setItem('checkin_completed', today);
+            localStorage.removeItem('checkin_remindTime');
+
+            // 3. Prepare payload
+            const username = localStorage.getItem('username');
+
+            // alert(today)
+
+            // 4. Send to backend
+            fetch("/workout_checkin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+                date: today
+            })
+            })
+            .then(response => response.json())
+            .then(data => {
+            console.log("Check-in response:", data);
+            })
+            .catch(error => {
+            console.error("Error checking in:", error);
+            });
+        });
 
       // Ensure function runs when page loads
       document.addEventListener("DOMContentLoaded", CheckTokenExpiration);
@@ -459,4 +615,3 @@
   </script>
 </body>
 </html>
-
