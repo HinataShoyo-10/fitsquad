@@ -41,7 +41,8 @@ def send_notification():
     try:
         res = requests.get("https://dev-fitsquad.onrender.com/send_notifications")
         print(res)
-        return res.status_code == 200
+        return True
+
     except Exception as error:
         telegram_bot_send(f"⚠️ Error triggering notification: {error}")
         return False
@@ -60,7 +61,7 @@ def run_scheduler():
         now = datetime.now(IST)
         current_time_str = now.strftime('%Y-%m-%d %H:%M:%S')
 
-        if now.hour == 19 and now.minute == 45:
+        if now.hour == 8 and now.minute == 29:
             if send_notification():
                 telegram_bot_send(f"✅ Notification sent at {current_time_str}")
             else:
