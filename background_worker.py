@@ -61,7 +61,7 @@ def run_scheduler():
         now = datetime.now(IST)
         current_time_str = now.strftime('%Y-%m-%d %H:%M:%S')
 
-        if now.hour == 8 and now.minute == 29:
+        if now.hour == 14 and now.minute == 00:
             if send_notification():
                 telegram_bot_send(f"✅ Notification sent at {current_time_str}")
             else:
