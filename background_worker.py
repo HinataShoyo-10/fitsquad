@@ -4,7 +4,6 @@ import requests
 from datetime import datetime, timedelta
 import pytz
 from dotenv import load_dotenv
-from threading import Thread
 from flask import Flask
 
 # Load environment variables
@@ -18,8 +17,14 @@ IST = pytz.timezone("Asia/Kolkata")
 # === Flask app ===
 app = Flask(__name__)
 
-@app.route('/ping')
+@app.route('/')
 def ping():
+    now = datetime.now(IST)
+    print(f"started -- {now}")
+    run_scheduler()
+
+    now = datetime.now(IST)
+    print(f"finished -- {now}")
     return "Bot is running!", 200
 
 # === Telegram Bot Function ===
@@ -61,7 +66,7 @@ def run_scheduler():
         now = datetime.now(IST)
         current_time_str = now.strftime('%Y-%m-%d %H:%M:%S')
 
-        if now.hour == 14 and now.minute == 00:
+        if now.hour == 23 and now.minute == 38:
             if send_notification():
                 telegram_bot_send(f"✅ Notification sent at {current_time_str}")
             else:
@@ -72,5 +77,4 @@ def run_scheduler():
 
 # === Start background thread ===
 if __name__ == '__main__':
-    Thread(target=run_scheduler, daemon=True).start()
     app.run(host='0.0.0.0', port=int(os.getenv("PORT", 5000)))
