@@ -35,8 +35,20 @@ notifications = [
     {"title": "No Gains Without Logs!", "message": "You know it. Go update it!"},
     {"title": "Spotted You… Not Logging", "message": "Come back and finish strong!"},
     {"title": "Reps or Netflix?", "message": "Hope you picked right. Log the truth!"},
-    {"title": "That Post-Pump High 🔥", "message": "Capture it in your log before it fades!"}
+    {"title": "That Post-Pump High 🔥", "message": "Capture it in your log before it fades!"},
+
+    {"title": "Did You Hit the Gym?", "message": "No better time than now—go log it!"},
+    {"title": "Workout Complete?", "message": "Mark it down and flex with pride."},
+    {"title": "Training Logged?", "message": "Because those gains deserve recognition."},
+    {"title": "Gym Session Done?", "message": "Then seal it in the app."},
+    {"title": "Lifted Today?", "message": "Let your log do the talking."},
+    {"title": "Moved or Snoozed?", "message": "Either way, time to check in."},
+    {"title": "Finished Your Sets?", "message": "End strong—log stronger."},
+    {"title": "Daily Grind Done?", "message": "Drop the data, champ!"},
+    {"title": "Workout Tracked Yet?", "message": "Let’s not let it slip."},
+    {"title": "Earn That Rest!", "message": "Just make sure it’s logged first."}
 ]
+
 
 
 def send_PushNotification():
@@ -57,7 +69,7 @@ def send_PushNotification():
         response = requests.post('https://api.webpushr.com/v1/notification/send/all', headers=headers, data=data)
         print(response)
 
-        return response
+        return response.status_code
 
     except Exception as error:
         print(error)

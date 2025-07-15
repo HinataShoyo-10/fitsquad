@@ -53,10 +53,10 @@ def profile():
 def worker():
     return send_from_directory('.','webpushr-sw.js')
 
-@app.route('/send_notifications')
+@app.route('/send_notifications', methods=["GET"])
 def send_notifications():
     res  = send_PushNotification()
-    print(f"send notificaitons -- {res} ")
+    return res
 
 @app.route("/create_account", methods=["POST"])
 def create_account():

@@ -16,6 +16,7 @@
         font-family: "Inter", sans-serif;
         background-color: #111827;
         color: #f3f4f6;
+        min-height: max(884px, 100dvh);
       }
       .main-container {
         max-width: 420px;
@@ -156,6 +157,17 @@
         flex-grow: 1;
       }
 
+      @keyframes popupFadeIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
       .checkin_popup-overlay {
       display: none;
       position: fixed;
@@ -180,6 +192,7 @@
       width: 80vw;
       text-align: center;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      animation: popupFadeIn 0.4s ease-out;
     }
 
     .checkin_popup_close {
@@ -205,11 +218,6 @@
       margin-left: 10px;
     }
 
-    </style>
-    <style>
-      body {
-        min-height: max(884px, 100dvh);
-      }
     </style>
     <script>
       //start webpushr tracking code -->
@@ -516,104 +524,79 @@
           
       }
 
-      const popup = document.getElementById('checkin_popup');
-      const closeBtn = document.getElementById('checkin_popup_close');
-      const checkinBtn = document.getElementById('checkin_btn');
-      const remindBtn = document.getElementById('checkin_remind_btn');
+      function DailyCheckinPopup() {
+        const popup = document.getElementById('checkin_popup');
+        const closeBtn = document.getElementById('checkin_popup_close');
+        const checkinBtn = document.getElementById('checkin_btn');
+        const remindBtn = document.getElementById('checkin_remind_btn');
+        const now = Date.now();
 
-      const now = new Date().getTime();
-      const remindTime = localStorage.getItem('checkin_remindTime');
-      const hasVisited = localStorage.getItem('checkin_completed');
-
-      const shouldShowPopup = () => {
-          const now = Date.now();
-          const today = new Date().toISOString().split("T")[0];
+        const shouldShowPopup = () => {
+          const today = new Date(now).toLocaleDateString('en-CA', {
+            timeZone: 'Asia/Kolkata',
+          });
 
           const lastCheckin = localStorage.getItem('checkin_completed');
-          const remindTime = localStorage.getItem('checkin_remindTime');
+          const remindTime = parseInt(localStorage.getItem('checkin_remindTime'), 10);
 
-          // Already checked in today
-          if (lastCheckin === today) {
-            //console.log("user checkedin Today")
-            return false;
+          if (lastCheckin === today) return false;
+
+          if (!isNaN(remindTime)) {
+            if (now < remindTime) return false;
+            localStorage.removeItem('checkin_remindTime');
           }
 
-          // If remindTime is set, check if the reminder time has passed
-          if (remindTime) {
-            const remindAfter = parseInt(remindTime, 10);
-            if (now < remindAfter) {
-              //console.log("still time left")
-              return false; // Not yet time to remind
-            } 
-            else {
-              //console.log("need to remind user")
-              localStorage.removeItem('checkin_remindTime'); // Clean it up
-            }
-          }
-
-          // Otherwise, show popup
           return true;
-      };
-
-
-        if (shouldShowPopup()) {
-        popup.style.display = 'flex';
-        }
-
-        // const handleCheckin = () => {
-        // popup.style.display = 'none';
-        // localStorage.setItem('checkin_completed', 'true');
-        // localStorage.removeItem('checkin_remindTime');
-        // };
-
-        const handleRemindLater = () => {
-        popup.style.display = 'none';
-        const remindAfter = now + 30 * 60 * 1000; // 30 minutes in ms
-        localStorage.setItem('checkin_remindTime', remindAfter.toString());
         };
 
-        closeBtn.addEventListener('click', handleRemindLater); // Treating close icon as "remind me later"
-        //gotItBtn.addEventListener('click', handleCheckin);
-        remindBtn.addEventListener('click', handleRemindLater);
+        const handleRemindLater = () => {
+          popup.style.display = 'none';
+          const remindAfter = now + 30 * 60 * 1000; // 30 minutes
+          localStorage.setItem('checkin_remindTime', remindAfter.toString());
+        };
 
-        checkinBtn.addEventListener("click", () => {
-            // 1. Hide popup
-            popup.style.display = 'none';
+        const handleCheckin = () => {
+          popup.style.display = 'none';
 
-            // 2. Store in localStorage
-            const today = new Date().toISOString().split("T")[0]; // "2025-07-12"
-            localStorage.setItem('checkin_completed', today);
-            localStorage.removeItem('checkin_remindTime');
+          const today = new Date(now).toLocaleDateString('en-CA', {
+            timeZone: 'Asia/Kolkata',
+          });
 
-            // 3. Prepare payload
-            const username = localStorage.getItem('username');
+          localStorage.setItem('checkin_completed', today);
+          localStorage.removeItem('checkin_remindTime');
 
-            // alert(today)
+          const username = localStorage.getItem('username');
 
-            // 4. Send to backend
-            fetch("/workout_checkin", {
+          fetch("/workout_checkin", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+              "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                username: username,
-                date: today
-            })
-            })
+            body: JSON.stringify({ username, date: today })
+          })
             .then(response => response.json())
-            .then(data => {
-            console.log("Check-in response:", data);
-            })
-            .catch(error => {
-            console.error("Error checking in:", error);
-            });
-        });
+            .then(data => console.log("Check-in response:", data))
+            .catch(error => console.error("Error checking in:", error));
+        };
+
+        if (shouldShowPopup()) {
+          popup.style.display = 'flex';
+        }
+
+        closeBtn.addEventListener('click', handleRemindLater);
+        remindBtn.addEventListener('click', handleRemindLater);
+        checkinBtn.addEventListener('click', handleCheckin);
+
+      }
 
       // Ensure function runs when page loads
-      document.addEventListener("DOMContentLoaded", CheckTokenExpiration);
-      document.addEventListener("DOMContentLoaded", loadExerciseData);
-      document.addEventListener("DOMContentLoaded", fetch_user_score);
+  // Run all DOMContentLoaded handlers
+  document.addEventListener("DOMContentLoaded", () => {
+        CheckTokenExpiration();
+        loadExerciseData();
+        fetch_user_score();
+        DailyCheckinPopup();
+      });
 
   </script>
 </body>
