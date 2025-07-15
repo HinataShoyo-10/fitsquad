@@ -1,14 +1,6 @@
-blinker
 certifi
 charset-normalizer
-click
-Flask
 idna
-itsdangerous
-Jinja2
-MarkupSafe
 python-dotenv
-pytz
 requests
 urllib3
-Werkzeug
