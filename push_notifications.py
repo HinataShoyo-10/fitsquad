@@ -56,7 +56,7 @@ def send_PushNotification():
         selected = random.choice(notifications)
         title=selected["title"]
         message = selected["message"]
-        Target_URL = "https://dev-fitsquad.onrender.com/"
+        Target_URL = "https://fitsquad.onrender.com/"
             
         headers = {
             'webpushrKey': os.getenv("webpushrKey"),
