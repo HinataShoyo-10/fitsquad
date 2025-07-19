@@ -398,7 +398,25 @@ def checkin():
         upsert=True
     )
 
+    # Incrementing Score by 15 points for completing workout
+    ScoreCard_collection.update_one(
+            {"username": username},
+            {"$inc": {"Score": 20}}
+        )
+
     return jsonify({"message": f"Checked in for {checkin_date}"}), 200
+
+
+@app.route('/api/checkin_dates')
+def get_checkin_dates():
+    username = request.args.get('username')
+    month = request.args.get('month')  # e.g., '2025-07'
+
+    checkin_doc = Users_PR_collection.find_one({"username": username}, {"_id": 0, "checkins": 1})
+    checkins = checkin_doc.get('checkins', []) if checkin_doc else []
+
+    filtered = [d for d in checkins if d.startswith(month)]
+    return jsonify({'checkins': filtered})
 
 
 def Fetch_Score(username=None):
