@@ -23,7 +23,7 @@ def telegram_bot_send(message):
 
 
 # === Notification Trigger ===
-def send_notification(env="both"):
+def send_notification(env):
     try:
         messages = []
 
