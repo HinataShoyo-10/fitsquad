@@ -1,4 +1,6 @@
 .venv
 .vscode
 .idx
+.env
 /utils
+/__pycache__

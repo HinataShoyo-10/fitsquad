@@ -1,11 +1,15 @@
+APScheduler
 autopep8
 blinker
+certifi
 cffi
+charset-normalizer
 click
 cryptography
 dnspython
 Flask
 flask-cors
+idna
 itsdangerous
 Jinja2
 jwcrypto
@@ -16,6 +20,9 @@ PyJWT
 pymongo
 python-dotenv
 python-env
+pytz
+requests
 typing_extensions
+tzlocal
+urllib3
 Werkzeug
-

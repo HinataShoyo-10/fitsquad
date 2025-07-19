@@ -2,23 +2,27 @@ import os
 import datetime as datetime
 import jwt
 import json
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
+from dotenv import load_dotenv
 from pymongo import MongoClient
 
+from push_notifications import send_PushNotification
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app, supports_credentials=True, expose_headers=["Authorization"])
-SECRET_KEY = "supersecretjwtkey"
+load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # Configuring Database
-mongodb_connection_string = "mongodb+srv://Admin_Control:Admin_Control@datacluster.nuq2d.mongodb.net/"
+mongodb_connection_string = os.getenv("mongodb_connection_string")
 mongodb_client = MongoClient(mongodb_connection_string)
 database = mongodb_client["Users"]
 creds_collection = database["Creds"]
 Users_PR_collection = database["Users_PR"]
 ScoreCard_collection = database["ScoreCard"]
 Feedback_collection = database["Feedback"]
+
 
 @app.route("/")
 def index():
@@ -43,6 +47,16 @@ def dashboard():
 @app.route("/profile")
 def profile():
     return render_template("profile.html")
+
+# Serve the Webpushr service worker files from root
+@app.route('/webpushr-sw.js')
+def worker():
+    return send_from_directory('.','webpushr-sw.js')
+
+@app.route('/send_notifications', methods=["GET"])
+def send_notifications():
+    res  = send_PushNotification()
+    return res
 
 @app.route("/create_account", methods=["POST"])
 def create_account():
@@ -368,6 +382,43 @@ def Fetch_Score_Call():
     result = Fetch_Score(username)
     return jsonify(result)  # Ensure response is properly formatted JSON
 
+@app.route('/workout_checkin', methods=['POST'])
+def checkin():
+    data = request.get_json()
+    username = data.get('username')
+    checkin_date = data.get('date')
+
+    if not username or not checkin_date:
+        return jsonify({'error': 'Missing username or date'}), 400
+
+    # Add check-in date if not already present
+    Users_PR_collection.update_one(
+        {"username": username},
+        {"$addToSet": {"checkins": checkin_date}},  # No duplicates
+        upsert=True
+    )
+
+    # Incrementing Score by 15 points for completing workout
+    ScoreCard_collection.update_one(
+            {"username": username},
+            {"$inc": {"Score": 20}}
+        )
+
+    return jsonify({"message": f"Checked in for {checkin_date}"}), 200
+
+
+@app.route('/api/checkin_dates')
+def get_checkin_dates():
+    username = request.args.get('username')
+    month = request.args.get('month')  # e.g., '2025-07'
+
+    checkin_doc = Users_PR_collection.find_one({"username": username}, {"_id": 0, "checkins": 1})
+    checkins = checkin_doc.get('checkins', []) if checkin_doc else []
+
+    filtered = [d for d in checkins if d.startswith(month)]
+    return jsonify({'checkins': filtered})
+
+
 def Fetch_Score(username=None):
     if username is None:
         results = list(ScoreCard_collection.find({}, {"username": 1, "Score": 1, "_id": 0}))
@@ -461,4 +512,3 @@ def main():
 if __name__ == "__main__":
     Fetch_Score()
     main()
-    
