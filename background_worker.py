@@ -45,7 +45,7 @@ def send_notification(env):
 
 # === Start background thread ===
 if __name__ == '__main__':
-    success, msg = send_notification(env="both")  # Change to "prod" or "dev" if needed
+    success, msg = send_notification(env="prod")  # Change to "prod" or "dev" if needed
 
     if success:
         telegram_bot_send(f"📢 Notifications Triggered Successfully\n\n{msg}")
