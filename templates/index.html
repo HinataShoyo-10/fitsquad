@@ -298,26 +298,13 @@
             </div>
         </div>
 
-        <section class="records-section">
-          <h2 class="section-title">Personal Records</h2>
-          <div class="table-container">
-            <table class="records-table">
-              <thead>
-                <tr>
-                  <th>Exercise</th>
-                  <th>Weight (kg)</th>
-                  <th>Sets</th>
-                  <th>Reps</th>
-                </tr>
-              </thead>
-              <tbody id="exerciseTable">
-                  <!-- Data will be inserted here -->
-              </tbody>
-            </table>
+        <section class="records-section p-4">
+          <h2 class="text-2xl font-bold mb-4 text-white">Personal Records</h2>
+          <div id="exerciseContainer" class="grid gap-6">
+            <!-- JS will insert categories here -->
           </div>
-
-        <!-- <div id="exerciseTables" style="margin-top: 20px; margin-bottom: 20px;"></div> -->
-
+        </section>
+        
         </section>
 
       </main>
@@ -408,54 +395,62 @@
       });
 
       async function loadExerciseData() {
+        try {
+            const response = await fetch("/get_exercises", {
+                headers: { "Authorization": `Bearer ${authToken}` }
+            });
+            const data = await response.json();
 
-      if (!authToken) {
-          console.error("No auth token found!");
-          return;
-      }
+            const container = document.getElementById("exerciseContainer");
+            container.innerHTML = "";
 
-      if(username){
-          // Find the span element with the id 'usernameSpan'
-          const usernameSpan = document.getElementById("username");
-          
-          // Update the span element with the username
-          usernameSpan.textContent = `${username}`;
-      }
+            // ✅ Group by category
+            const grouped = {};
+            data.exercises.forEach(ex => {
+                const cat = ex.category || "Uncategorized";
+                if (!grouped[cat]) grouped[cat] = [];
+                grouped[cat].push(ex);
+            });
 
-      try {
-              const response = await fetch("/get_exercises", {
-                  method: "GET",
-                  headers: {
-                      "Content-Type": "application/json",
-                      "Authorization": `Bearer ${authToken}` // Attach token for authentication
-                  }
-              });
+            // ✅ Render category cards
+            for (const [category, exercises] of Object.entries(grouped)) {
+                const card = document.createElement("div");
+                card.className = "bg-gray-900 rounded-2xl p-4 shadow-lg";
 
-              if (!response.ok) {
-                  throw new Error("Failed to fetch exercises");
-              }
+                const title = `<h3 class="text-xl font-semibold mb-3 text-yellow-400">${category}</h3>`;
+                const table = `
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-gray-300">
+                      <thead class="border-b border-gray-700">
+                        <tr>
+                          <th class="text-left py-2">Exercise</th>
+                          <th class="text-center py-2">Weight</th>
+                          <th class="text-center py-2">Sets</th>
+                          <th class="text-center py-2">Reps</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${exercises.map(ex => `
+                          <tr class="hover:bg-gray-800 transition">
+                            <td class="py-2">${ex.exercise_name}</td>
+                            <td class="text-center py-2">${ex.weights.$numberInt || ex.weights} kg</td>
+                            <td class="text-center py-2">${ex.sets.$numberInt || ex.sets}</td>
+                            <td class="text-center py-2">${ex.reps.$numberInt || ex.reps}</td>
+                          </tr>
+                        `).join("")}
+                      </tbody>
+                    </table>
+                  </div>`;
 
-              const data = await response.json();
-              //console.log("Fetched exercises:", data); // Debugging output
+                card.innerHTML = title + table;
+                container.appendChild(card);
+            }
 
-              const tableBody = document.getElementById("exerciseTable");
-              tableBody.innerHTML = ""; // Clear previous entries
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
-              data.exercises.forEach(exercise => {
-                  const row = `<tr>
-                      <td>${exercise.exercise_name}</td>
-                      <td>${exercise.weights} kg</td>
-                      <td>${exercise.sets}</td>
-                      <td>${exercise.reps}</td>
-                  </tr>`;
-                  tableBody.innerHTML += row;
-              });
-
-          } 
-          catch (error) {
-                  console.error("Error loading exercise data:", error);
-              }
-          }
 
       async function CheckTokenExpiration() {
         

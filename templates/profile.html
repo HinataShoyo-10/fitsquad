@@ -117,7 +117,7 @@
       font-size: x-large;
     }
 
-    input[type="float"] {
+    input[type="number"] {
       width: 100%;
       padding: 8px;
       margin-top: 4px;
@@ -128,7 +128,7 @@
       color: white;
     }
 
-    input[type="float"]::placeholder {
+    input[type="number"]::placeholder {
       color: #ccc;
     }
 
@@ -310,62 +310,62 @@
       <form id="BMform" method="POST" action="/update_measurements" style="display: flex; flex-direction: column; gap: 1rem;">
         <div>
           <label for="height" style="display: block; font-size: 0.875rem; color: #d1d5db;">Height (cm)</label>
-          <input type="float" id="height" name="height" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+          <input type="number" step="any" id="height" name="height" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
         </div>
         <div>
           <label for="weight" style="display: block; font-size: 0.875rem; color: #d1d5db;">Weight (kg)</label>
-          <input type="float" id="weight" name="weight" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+          <input type="number" step="any" id="weight" name="weight" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
         </div>
         <div>
           <label for="chest" style="display: block; font-size: 0.875rem; color: #d1d5db;">Chest (cm)</label>
-          <input type="float" id="chest" name="chest" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+          <input type="number" step="any" id="chest" name="chest" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
         </div>
         <div>
           <label for="waist" style="display: block; font-size: 0.875rem; color: #d1d5db;">Waist (cm)</label>
-          <input type="float" id="waist" name="waist" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+          <input type="number" step="any" id="waist" name="waist" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
         </div>
 
         <div style="display: flex; gap: 1rem;">
           <div style="flex: 1;">
             <label for="bicep_r" style="display: block; font-size: 0.875rem; color: #d1d5db;">Bicep (R)</label>
-            <input type="float" id="bicep_r" name="bicep_r" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+            <input type="number" step="any" id="bicep_r" name="bicep_r" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
           </div>
           <div style="flex: 1;">
             <label for="bicep_l" style="display: block; font-size: 0.875rem; color: #d1d5db;">Bicep (L)</label>
-            <input type="float" id="bicep_l" name="bicep_l" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+            <input type="number" step="any" id="bicep_l" name="bicep_l" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
           </div>
         </div>
 
         <div style="display: flex; gap: 1rem;">
           <div style="flex: 1;">
             <label for="forearms_r" style="display: block; font-size: 0.875rem; color: #d1d5db;">Forearm (R)</label>
-            <input type="float" id="forearms_r" name="forearms_r" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+            <input type="number" step="any" id="forearms_r" name="forearms_r" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
           </div>
           <div style="flex: 1;">
             <label for="forearms_l" style="display: block; font-size: 0.875rem; color: #d1d5db;">Forearm (L)</label>
-            <input type="float" id="forearms_l" name="forearms_l" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+            <input type="number" step="any" id="forearms_l" name="forearms_l" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
           </div>
         </div>
 
         <div style="display: flex; gap: 1rem;">
           <div style="flex: 1;">
             <label for="thigh_r" style="display: block; font-size: 0.875rem; color: #d1d5db;">Thigh (R)</label>
-            <input type="float" id="thigh_r" name="thigh_r" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+            <input type="number" step="any" id="thigh_r" name="thigh_r" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
           </div>
           <div style="flex: 1;">
             <label for="thigh_l" style="display: block; font-size: 0.875rem; color: #d1d5db;">Thigh (L)</label>
-            <input type="float" id="thigh_l" name="thigh_l" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+            <input type="number" step="any" id="thigh_l" name="thigh_l" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
           </div>
         </div>
 
         <div style="display: flex; gap: 1rem;">
           <div style="flex: 1;">
             <label for="calf_r" style="display: block; font-size: 0.875rem; color: #d1d5db;">Calf (R)</label>
-            <input type="float" id="calf_r" name="calf_r" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+            <input type="number" step="any" id="calf_r" name="calf_r" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
           </div>
           <div style="flex: 1;">
             <label for="calf_l" style="display: block; font-size: 0.875rem; color: #d1d5db;">Calf (L)</label>
-            <input type="float" id="calf_l" name="calf_l" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
+            <input type="number" step="any" id="calf_l" name="calf_l" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc;" />
           </div>
         </div>
 
